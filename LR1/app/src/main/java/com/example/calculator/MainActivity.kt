@@ -1,38 +1,28 @@
-package com.example.calculator.presentation
+package com.example.calculator
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.calculator.R
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var display: TextView
     private var expression = ""
-    private var isNewOperation = false
-    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         display = findViewById(R.id.displayText)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
     }
 
     fun onNumberClick(view: View) {
         val value = (view as Button).text.toString()
 
-        if (isNewOperation) {
-            expression = ""
-            isNewOperation = false
-        }
-
         if (value == ".") {
-            val lastNumber = expression.split(Regex("[+\\-*/]")).last()
+            val lastNumber = expression.split("+", "-", "*", "/").last()
             if (lastNumber.contains(".")) return
         }
 
@@ -45,51 +35,26 @@ class MainActivity : AppCompatActivity() {
 
         if (expression.isEmpty()) return
 
-        if (isNewOperation) {
-            isNewOperation = false
-        }
-
-        val lastChar = expression.last().toString()
-        if (lastChar in listOf("+", "-", "*", "/")) {
+        if (expression.last().toString() in listOf("+", "-", "*", "/"))
             return
-        }
 
         expression += operator
         display.text = expression
     }
-
     fun onEqualClick(view: View) {
         try {
-            if (expression.isEmpty() || expression.last().toString() in listOf("+", "-", "*", "/")) {
-                display.text = "Error"
-                expression = ""
-                return
-            }
-
             val result = evaluateExpression(expression)
-
-            val resultText = if (result == result.toInt().toDouble()) {
-                result.toInt().toString()
-            } else {
-                result.toString()
-            }
-
-            display.text = resultText
-            expression = resultText
-            isNewOperation = true
+            display.text = result.toString()
+            expression = result.toString()
         } catch (e: Exception) {
             display.text = "Error"
             expression = ""
-            isNewOperation = false
         }
     }
-
     fun onClearClick(view: View) {
         expression = ""
         display.text = "0"
-        isNewOperation = false
     }
-
     private fun evaluateExpression(expr: String): Double {
 
         val tokens = mutableListOf<String>()
@@ -99,34 +64,24 @@ class MainActivity : AppCompatActivity() {
             if (char.isDigit() || char == '.') {
                 number += char
             } else {
-                if (number.isNotEmpty()) {
-                    tokens.add(number)
-                    number = ""
-                }
+                tokens.add(number)
                 tokens.add(char.toString())
+                number = ""
             }
         }
-        if (number.isNotEmpty()) {
-            tokens.add(number)
-        }
+        tokens.add(number)
 
         var i = 0
         while (i < tokens.size) {
             if (tokens[i] == "*" || tokens[i] == "/") {
                 val left = tokens[i - 1].toDouble()
                 val right = tokens[i + 1].toDouble()
-
-                val result = if (tokens[i] == "*") {
-                    left * right
-                } else {
-                    if (right == 0.0) throw ArithmeticException("Division by zero")
-                    left / right
-                }
+                val result = if (tokens[i] == "*") left * right else left / right
 
                 tokens[i - 1] = result.toString()
                 tokens.removeAt(i)
                 tokens.removeAt(i)
-
+                i--
             } else {
                 i++
             }
