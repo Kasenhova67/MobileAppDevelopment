@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var display: TextView
     private var expression = ""
+    private var isResultShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +21,11 @@ class MainActivity : AppCompatActivity() {
 
     fun onNumberClick(view: View) {
         val value = (view as Button).text.toString()
+
+        if (isResultShown) {
+            expression = ""
+            isResultShown = false
+        }
 
         if (value == ".") {
             val lastNumber = expression.split("+", "-", "*", "/").last()
@@ -34,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         val operator = (view as Button).text.toString()
 
         if (expression.isEmpty()) return
+        isResultShown = false
 
         if (expression.last().toString() in listOf("+", "-", "*", "/"))
             return
@@ -41,18 +48,30 @@ class MainActivity : AppCompatActivity() {
         expression += operator
         display.text = expression
     }
+
     fun onEqualClick(view: View) {
         try {
             val result = evaluateExpression(expression)
-            display.text = result.toString()
-            expression = result.toString()
+
+            val formatted = if (result % 1.0 == 0.0) {
+                result.toInt().toString()
+            } else {
+                result.toString()
+            }
+
+            display.text = formatted
+            expression = formatted
+            isResultShown = true
+
         } catch (e: Exception) {
             display.text = "Error"
             expression = ""
         }
     }
+
     fun onClearClick(view: View) {
         expression = ""
+        isResultShown = false
         display.text = "0"
     }
     private fun evaluateExpression(expr: String): Double {
