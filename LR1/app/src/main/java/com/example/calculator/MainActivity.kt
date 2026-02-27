@@ -1,5 +1,6 @@
 package com.example.calculator
 
+
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -8,11 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var display: TextView
     private var expression = ""
     private var isResultShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -20,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onNumberClick(view: View) {
+
         val value = (view as Button).text.toString()
 
         if (isResultShown) {
@@ -37,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onOperatorClick(view: View) {
+
         val operator = (view as Button).text.toString()
 
         if (expression.isEmpty()) return
@@ -50,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onEqualClick(view: View) {
+
         try {
             val result = evaluateExpression(expression)
 
@@ -70,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClearClick(view: View) {
+
         expression = ""
         isResultShown = false
         display.text = "0"
@@ -123,4 +131,9 @@ class MainActivity : AppCompatActivity() {
 
         return result
     }
+
+
+
+
+
 }

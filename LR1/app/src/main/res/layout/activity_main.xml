@@ -20,81 +20,98 @@
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="4"
+        android:layout_height="447dp"
         android:layout_marginTop="20dp"
-        android:background="#CDA8FB">
+        android:background="#CDA8FB"
+        android:columnCount="4">
         <!-- ROW 1 -->
-        <Button style="@style/CalcButton"
-            android:text="7"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="7" />
 
-        <Button style="@style/CalcButton"
-            android:text="8"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="8" />
 
-        <Button style="@style/CalcButton"
-            android:text="9"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="9" />
 
-        <Button style="@style/OperatorButton"
-            android:text="/"
-            android:onClick="onOperatorClick"/>
+        <Button
+            style="@style/OperatorButton"
+            android:onClick="onOperatorClick"
+            android:text="/" />
 
         <!-- ROW 2 -->
-        <Button style="@style/CalcButton"
-            android:text="4"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="4" />
 
-        <Button style="@style/CalcButton"
-            android:text="5"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="5" />
 
-        <Button style="@style/CalcButton"
-            android:text="6"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="6" />
 
-        <Button style="@style/OperatorButton"
-            android:text="*"
-            android:onClick="onOperatorClick"/>
+        <Button
+            style="@style/OperatorButton"
+            android:onClick="onOperatorClick"
+            android:text="*" />
 
         <!-- ROW 3 -->
-        <Button style="@style/CalcButton"
-            android:text="1"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="1" />
 
-        <Button style="@style/CalcButton"
-            android:text="2"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="2" />
 
-        <Button style="@style/CalcButton"
-            android:text="3"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="3" />
 
-        <Button style="@style/OperatorButton"
-            android:text="-"
-            android:onClick="onOperatorClick"/>
+        <Button
+            style="@style/OperatorButton"
+            android:onClick="onOperatorClick"
+            android:text="-" />
 
         <!-- ROW 4 -->
-        <Button style="@style/OperatorButton"
-            android:text="C"
-            android:onClick="onClearClick"/>
+        <Button
+            style="@style/OperatorButton"
+            android:onClick="onClearClick"
+            android:text="C" />
 
-        <Button style="@style/CalcButton"
-            android:text="0"
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="0" />
 
-        <Button style="@style/CalcButton"
-            android:text="."
-            android:onClick="onNumberClick"/>
+        <Button
+            style="@style/CalcButton"
+            android:onClick="onNumberClick"
+            android:text="." />
 
-        <Button style="@style/OperatorButton"
-            android:text="+"
-            android:onClick="onOperatorClick"/>
+        <Button
+            style="@style/OperatorButton"
+            android:onClick="onOperatorClick"
+            android:text="+" />
 
-        <Button style="@style/OperatorButton"
-            android:text="="
-            android:onClick="onEqualClick"/>
+        <Button
+            style="@style/OperatorButton"
+            android:onClick="onEqualClick"
+            android:text="=" />
 
     </GridLayout>
 
