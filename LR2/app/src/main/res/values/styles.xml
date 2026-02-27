@@ -1,0 +1,35 @@
+<resources>
+
+    <style name="CalcButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:backgroundTint">#673AB7</item>
+    </style>
+
+    <style name="OperatorButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/operator_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:backgroundTint">#673AB7</item>
+    </style>
+
+    <style name="ShareButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FF00D5</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:backgroundTint">#673AB7</item>
+    </style>
+
+</resources>
