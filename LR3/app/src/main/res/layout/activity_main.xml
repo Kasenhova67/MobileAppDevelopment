@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E0C8FF"
+    android:padding="@dimen/screen_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/display_height"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="@dimen/display_padding">
+
+        <TextView
+            android:id="@+id/expressionPreview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text=""
+            android:textSize="@dimen/preview_text_size"
+            android:textColor="#666666"
+            android:gravity="end|center_vertical" />
+
+        <TextView
+            android:id="@+id/displayText"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="0"
+            android:textSize="@dimen/display_text_size"
+            android:textStyle="bold"
+            android:gravity="end|center_vertical" />
+    </LinearLayout>
+
+    <include layout="@layout/calculator_buttons" />
+
+    <Button
+        android:id="@+id/btnShare"
+        style="@style/ShareButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/share_button_height"
+        android:layout_marginTop="@dimen/share_button_margin"
+        android:text="Share Result" />
+
+</LinearLayout>
