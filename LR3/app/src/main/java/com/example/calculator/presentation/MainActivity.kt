@@ -1,31 +1,37 @@
 package com.example.calculator.presentation
 
 import android.content.Intent
-
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.calculator.R
+import com.example.calculator.presentation.MainViewModel
 import com.example.calculator.Data.CalculatorRepositoryImpl
+import com.example.calculator.Data.HistoryRepository
 import com.example.calculator.Data.LocalDataSource
+import com.example.calculator.Data.ThemeRepository
 import com.example.calculator.Domain.CalculateExpressionUseCase
 import com.example.calculator.Domain.ShareResultUseCase
 import com.example.calculator.Domain.ValidateExpressionUseCase
-
+import com.example.calculator.utils.NotificationManager
 import com.example.calculator.utils.SoundManager
+import android.graphics.Color
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var soundManager: SoundManager
     private lateinit var shareResultUseCase: ShareResultUseCase
+    private lateinit var notificationManager: NotificationManager
 
     private lateinit var display: TextView
     private lateinit var expressionPreview: TextView
+    private lateinit var mainLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +41,39 @@ class MainActivity : AppCompatActivity() {
         initializeViews()
         setupObservers()
         setupClickListeners()
+
+        handleIntent(intent)
+
+        viewModel.loadTheme()
+        viewModel.loadHistory()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        when (intent.getStringExtra("notification_type")) {
+            "calculation" -> {
+                Toast.makeText(this, "New calculation added to history", Toast.LENGTH_SHORT).show()
+                viewModel.loadHistory()
+            }
+            "theme_update" -> {
+                viewModel.loadTheme()
+                Toast.makeText(this, "Theme has been updated", Toast.LENGTH_SHORT).show()
+            }
+            "history_cleared" -> {
+                viewModel.clearHistory()
+                Toast.makeText(this, "History has been cleared", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initializeDependencies() {
-        val calculatorRepository = CalculatorRepositoryImpl(
-            LocalDataSource(getSharedPreferences("calculator_prefs", MODE_PRIVATE))
-        )
+        val sharedPrefs = getSharedPreferences("calculator_prefs", MODE_PRIVATE)
+        val localDataSource = LocalDataSource(sharedPrefs)
+        val calculatorRepository = CalculatorRepositoryImpl(localDataSource)
 
         val calculateExpressionUseCase = CalculateExpressionUseCase(calculatorRepository)
         val validateExpressionUseCase = ValidateExpressionUseCase(calculatorRepository)
@@ -52,11 +85,13 @@ class MainActivity : AppCompatActivity() {
 
         soundManager = SoundManager(this)
         shareResultUseCase = ShareResultUseCase()
+        notificationManager = NotificationManager(this)
     }
 
     private fun initializeViews() {
         display = findViewById(R.id.displayText)
         expressionPreview = findViewById(R.id.expressionPreview)
+        mainLayout = findViewById(R.id.mainLayout)
     }
 
     private fun setupObservers() {
@@ -74,10 +109,20 @@ class MainActivity : AppCompatActivity() {
                 viewModel.clearError()
             }
         }
+
+        viewModel.themeColors.observe(this) { colors ->
+            colors?.let {
+                applyTheme(it)
+            }
+        }
+
+        viewModel.history.observe(this) { historyItems ->
+
+        }
     }
 
     private fun setupClickListeners() {
-        // Numbers 0-9
+
         val numberButtons = listOf(
             R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
             R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9
@@ -133,6 +178,20 @@ class MainActivity : AppCompatActivity() {
             soundManager.playClick()
             handleShareClick()
         }
+
+        try {
+            findViewById<Button>(R.id.btnHistory).setOnClickListener {
+                soundManager.playClick()
+                showHistoryDialog()
+            }
+        } catch (e: Exception) {
+
+            findViewById<Button>(R.id.btnShare).setOnLongClickListener {
+                soundManager.playClick()
+                showHistoryDialog()
+                true
+            }
+        }
     }
 
     private fun handleShareClick() {
@@ -160,5 +219,59 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         soundManager.release()
+    }
+
+    private fun applyTheme(colors: ThemeRepository.ThemeColors) {
+        try {
+            val numberButtons = listOf(
+                R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
+                R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9,
+                R.id.btnDot, R.id.btnEquals
+            )
+
+            numberButtons.forEach { id ->
+                findViewById<Button>(id)?.setBackgroundColor(colors.primaryColor)
+            }
+
+            val operatorButtons = listOf(
+                R.id.btnPlus, R.id.btnMinus, R.id.btnMultiply, R.id.btnDivide,
+                R.id.btnClear, R.id.btnBackspace
+            )
+
+            operatorButtons.forEach { id ->
+                findViewById<Button>(id)?.setBackgroundColor(colors.operatorColor)
+            }
+
+            mainLayout.setBackgroundColor(colors.backgroundColor)
+
+            window.statusBarColor = colors.statusBarColor
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun showHistoryDialog() {
+        val history = viewModel.history.value ?: emptyList()
+
+        if (history.isEmpty()) {
+            Toast.makeText(this, "No history yet", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val items = history.map { "${it.expression} = ${it.result}" }.toTypedArray()
+
+        AlertDialog.Builder(this)
+            .setTitle("Calculation History")
+            .setItems(items) { _, position ->
+                // Optional: Handle item click - maybe paste the expression?
+                val selectedItem = history[position]
+                viewModel.setExpression(selectedItem.expression)
+            }
+            .setPositiveButton("Clear All") { _, _ ->
+                viewModel.clearHistory()
+            }
+            .setNegativeButton("Close", null)
+            .show()
     }
 }

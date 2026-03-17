@@ -28,6 +28,23 @@
             android:theme="@style/Theme.CalculatorApp">
 
         </activity>
+
+        <service
+            android:name=".presentation.NotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.google.android.gms.cloudmessaging.CloudMessagingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -38,6 +55,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path"/>
         </provider>
+
+
     </application>
 
-</manifest>
+    </manifest>

@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.calculator.Domain.CalculationResult
+import com.example.calculator.Data.ThemeRepository
+import com.example.calculator.Domain.model.HistoryItem
+import com.example.calculator.Data.HistoryRepository
 import com.example.calculator.Domain.CalculateExpressionUseCase
 import com.example.calculator.Domain.ValidateExpressionUseCase
 import kotlinx.coroutines.launch
@@ -13,6 +16,60 @@ class MainViewModel(
     private val calculateExpressionUseCase: CalculateExpressionUseCase,
     private val validateExpressionUseCase: ValidateExpressionUseCase
 ) : ViewModel() {
+
+    private val _themeColors = MutableLiveData<ThemeRepository.ThemeColors?>()
+    val themeColors: LiveData<ThemeRepository.ThemeColors?> = _themeColors
+    private val themeRepository = ThemeRepository()
+
+    fun loadTheme() {
+        viewModelScope.launch {
+            try {
+                themeRepository.initRemoteConfig()
+                val colors = themeRepository.fetchThemeColors()
+                _themeColors.value = colors
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = "Failed to load theme: ${e.message}"
+            }
+        }
+    }
+
+    private val _history = MutableLiveData<List<HistoryItem>>(emptyList())
+    val history: LiveData<List<HistoryItem>> = _history
+    private val historyRepository = HistoryRepository()
+
+    fun loadHistory() {
+        viewModelScope.launch {
+            try {
+                historyRepository.loadHistory().collect { items ->
+                    _history.value = items
+                }
+            } catch (e: Exception) {
+                _error.value = "Failed to load history: ${e.message}"
+            }
+        }
+    }
+
+    private fun saveToHistory(expression: String, result: String) {
+        viewModelScope.launch {
+            try {
+                historyRepository.saveCalculation(expression, result)
+            } catch (e: Exception) {
+                _error.value = "Failed to save history: ${e.message}"
+            }
+        }
+    }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            try {
+                historyRepository.clearHistory()
+                loadHistory()
+            } catch (e: Exception) {
+                _error.value = "Failed to clear history: ${e.message}"
+            }
+        }
+    }
 
     private val _expression = MutableLiveData("")
     val expression: LiveData<String> = _expression
@@ -26,8 +83,12 @@ class MainViewModel(
     private val _isResultShown = MutableLiveData(false)
     val isResultShown: LiveData<Boolean> = _isResultShown
 
-    fun addCharacter(char: String) {
+    fun setExpression(expression: String) {
+        _expression.value = expression
+        _isResultShown.value = false
+    }
 
+    fun addCharacter(char: String) {
         if (_isResultShown.value == true) {
             _expression.value = ""
             _isResultShown.value = false
@@ -37,13 +98,11 @@ class MainViewModel(
 
         if (char in listOf("+", "-", "*", "/")) {
             if (currentExpression.isEmpty()) {
-
                 _error.value = "Expression cannot start with operator"
                 return
             }
             val lastChar = currentExpression.last().toString()
             if (lastChar in listOf("+", "-", "*", "/")) {
-                // Нельзя ставить два оператора подряд
                 _error.value = "Cannot use two operators in a row"
                 return
             }
@@ -83,28 +142,29 @@ class MainViewModel(
             return
         }
 
-        // Проверка на некорректное окончание
         val lastChar = expression.last().toString()
         if (lastChar in listOf("+", "-", "*", "/", ".")) {
             _error.value = "Expression cannot end with operator or dot"
             return
         }
 
-        viewModelScope.launch {
-            when (val result = calculateExpressionUseCase(expression)) {
-                is CalculationResult.Success -> {
-                    _result.value = result.value
-                    _expression.value = result.value
-                    _isResultShown.value = true
-                    _error.value = null
+        when (val result = calculateExpressionUseCase(expression)) {
+            is CalculationResult.Success -> {
+                _result.value = result.value
+                _expression.value = result.value
+                _isResultShown.value = true
+                _error.value = null
+
+                viewModelScope.launch {
+                    saveToHistory(expression, result.value)
                 }
-                is CalculationResult.Error -> {
-                    _error.value = result.message
-                    _result.value = "Error"
-                }
-                is CalculationResult.Empty -> {
-                    _error.value = "Enter expression"
-                }
+            }
+            is CalculationResult.Error -> {
+                _error.value = result.message
+                _result.value = "Error"
+            }
+            is CalculationResult.Empty -> {
+                _error.value = "Enter expression"
             }
         }
     }
