@@ -3,8 +3,8 @@
 <resources>
     <color name="background">#F5F5F5</color>
     <color name="display_bg">#FFFFFF</color>
-    <color name="operator_color">#FF9800</color>
-    <color name="number_color">#424242</color>
+    <color name="operator_color">#673AB7</color>
+    <color name="number_color">#FFFFFF</color>
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>

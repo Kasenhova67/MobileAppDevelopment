@@ -45,12 +45,4 @@
         android:layout_marginTop="@dimen/share_button_margin"
         android:text="Share Result" />
 
-    <Button
-        android:id="@+id/btnHistory"
-        style="@style/ShareButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/share_button_height"
-        android:layout_marginTop="@dimen/share_button_margin"
-        android:text="History" />
-
 </LinearLayout>

@@ -2,5 +2,5 @@
 plugins {
     id("com.android.application") version libs.versions.agp apply false
     kotlin("plugin.compose") version libs.versions.kotlin apply false
-    id("com.google.gms.google-services") version "4.4.4" apply false
+    id("com.google.gms.google-services") version "4.4.1" apply false
 }

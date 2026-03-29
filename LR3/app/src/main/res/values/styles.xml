@@ -6,7 +6,6 @@
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_margin">@dimen/button_margin</item>
-        <item name="android:backgroundTint">#673AB7</item>
         <item name="android:padding">0dp</item>
     </style>
 
@@ -15,10 +14,8 @@
         <item name="android:layout_height">@dimen/button_height</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:textSize">@dimen/button_text_size</item>
-        <item name="android:textColor">#FF9800</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_margin">@dimen/button_margin</item>
-        <item name="android:backgroundTint">#673AB7</item>
         <item name="android:padding">0dp</item>
     </style>
 
@@ -29,7 +26,6 @@
         <item name="android:textColor">#FF558D</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginTop">@dimen/share_button_margin</item>
-        <item name="android:backgroundTint">#673AB7</item>
         <item name="android:padding">0dp</item>
     </style>
 </resources>

@@ -27,9 +27,19 @@ class MainViewModel(
                 themeRepository.initRemoteConfig()
                 val colors = themeRepository.fetchThemeColors()
                 _themeColors.value = colors
-                _error.value = null
             } catch (e: Exception) {
                 _error.value = "Failed to load theme: ${e.message}"
+            }
+        }
+    }
+
+    fun forceReloadTheme() {
+        viewModelScope.launch {
+            try {
+                val colors = themeRepository.forceFetchThemeColors()
+                _themeColors.value = colors
+            } catch (e: Exception) {
+                _error.value = "Failed to reload theme: ${e.message}"
             }
         }
     }
@@ -154,10 +164,7 @@ class MainViewModel(
                 _expression.value = result.value
                 _isResultShown.value = true
                 _error.value = null
-
-                viewModelScope.launch {
-                    saveToHistory(expression, result.value)
-                }
+                saveToHistory(expression, result.value)
             }
             is CalculationResult.Error -> {
                 _error.value = result.message

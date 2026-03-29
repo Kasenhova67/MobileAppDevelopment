@@ -1,31 +1,24 @@
 package com.example.calculator.utils
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 
 class NotificationManager(private val context: Context) {
 
-    companion object {
-        private const val TAG = "NotificationManager"
-    }
-
     suspend fun subscribeToTopic(topic: String) {
         try {
             FirebaseMessaging.getInstance().subscribeToTopic(topic).await()
-            Log.d(TAG, "Subscribed to topic: $topic")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to subscribe to topic: $topic", e)
+            // Ignore
         }
     }
 
     suspend fun unsubscribeFromTopic(topic: String) {
         try {
             FirebaseMessaging.getInstance().unsubscribeFromTopic(topic).await()
-            Log.d(TAG, "Unsubscribed from topic: $topic")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to unsubscribe from topic: $topic", e)
+            // Ignore
         }
     }
 
