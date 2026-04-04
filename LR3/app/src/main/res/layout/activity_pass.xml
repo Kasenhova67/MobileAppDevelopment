@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Введите пин-код"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/etPin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberPassword"
+        android:maxLength="6"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Войти"
+        android:textSize="18sp"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/tvReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Забыли пин-код?"
+        android:textColor="@android:color/holo_blue_dark"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tvBiometricHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Используйте биометрию для сброса"
+        android:textSize="12sp"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        android:layout_marginTop="32dp"/>
+
+</LinearLayout>
